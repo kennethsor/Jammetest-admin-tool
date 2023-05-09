@@ -39,6 +39,9 @@ export default {
             }
         }
     },
+    mounted() {
+        this.dropdownOnClick(this.tests[0]);
+    },
     expose: ['onNextTest', 'onPreviousTest']
 }
 

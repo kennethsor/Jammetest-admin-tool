@@ -37,9 +37,15 @@ export default {
       this.selectedItem = item;
     },
     toggleTestRunning(running) {
-      this.testRunning = running; 
+      this.testRunning = running;
+      if (this.testRunning) {
+        this.$refs.testInfo.setTestStartTime(new Date());
+      }
+      else {
+        this.$refs.testInfo.setTestStartTime(null)
+      }
     },
-    onNextTest(parameter){
+    onNextTest(parameter) {
       this.$refs.testPicker.onNextTest();
     },
     onPreviousTest(parameter) {
@@ -61,26 +67,22 @@ export default {
         <JammetestTimer :datetime=datetime></JammetestTimer>
       </div>
       <div class="col">
-        <JammetestTestPicker 
-          @update-test="updateItem" ref="testPicker">
+        <JammetestTestPicker @update-test="updateItem" ref="testPicker">
         </JammetestTestPicker>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <JammetestTestInfo 
-          :testName="selectedItem ? selectedItem.name : 'Not selected'" 
-          :testDescription="selectedItem ? selectedItem.description : 'Not selected'"
-          :testRunning="testRunning">
+        <JammetestTestInfo :testName="selectedItem ? selectedItem.name : 'Not selected'"
+          :testDescription="selectedItem ? selectedItem.description : 'Not selected'" :testRunning="testRunning"
+          :currentTime="datetime" ref="testInfo">
         </JammetestTestInfo>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <JammetestTextControl 
-        @toggle-test-running="toggleTestRunning"
-        @set-previous-test="onPreviousTest"
-        @set-next-test="onNextTest"></JammetestTextControl>
+        <JammetestTextControl @toggle-test-running="toggleTestRunning" @set-previous-test="onPreviousTest"
+          @set-next-test="onNextTest"></JammetestTextControl>
       </div>
     </div>
   </div>
