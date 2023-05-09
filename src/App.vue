@@ -57,10 +57,10 @@ export default {
       </div>
     </div>
     <div class="row">
-      <div class="col-6">
+      <div class="col">
         <JammetestTimer :datetime=datetime></JammetestTimer>
       </div>
-      <div class="col-6">
+      <div class="col">
         <JammetestTestPicker 
           @update-test="updateItem" ref="testPicker">
         </JammetestTestPicker>
