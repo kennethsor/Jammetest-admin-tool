@@ -40,10 +40,10 @@ export default {
       this.testRunning = running; 
     },
     onNextTest(parameter){
-      // TODO: implement call to child to set next test
+      this.$refs.testPicker.onNextTest();
     },
     onPreviousTest(parameter) {
-      // TODO: implement call to child to set next test
+      this.$refs.testPicker.onPreviousTest();
     }
   }
 }
@@ -62,7 +62,7 @@ export default {
       </div>
       <div class="col-6">
         <JammetestTestPicker 
-          @update-test="updateItem">
+          @update-test="updateItem" ref="testPicker">
         </JammetestTestPicker>
       </div>
     </div>

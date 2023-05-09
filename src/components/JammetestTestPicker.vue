@@ -6,15 +6,40 @@ export default {
     data() {
         return {
             tests: tests.tests,
-            selectedItem: null,
+            selectedItem: null
         }
     },
     methods: {
         dropdownOnClick(item) {
             this.selectedItem = item;
             this.$emit('update-test', this.selectedItem);
+        },
+        onNextTest() {
+            if(!this.selectedItem) {
+                this.dropdownOnClick(this.tests[0]);
+            }
+            else{
+                const currentTestIdx = this.tests.indexOf(this.selectedItem);
+                if(this.tests.length - 1 > currentTestIdx){
+                    this.dropdownOnClick(this.tests[currentTestIdx + 1]);
+                }
+                // in any other case, do nothing since it is the last element
+            }
+        },
+        onPreviousTest() {
+            if(!this.selectedItem) { // default to the first test
+                this.dropdownOnClick(this.tests[0]);
+            }
+            else{
+                const currentTestIdx = this.tests.indexOf(this.selectedItem);
+                if (currentTestIdx > 0) {
+                    this.dropdownOnClick(this.tests[currentTestIdx - 1]);
+                }
+                // in any other case, do nothing since it is the first element
+            }
         }
-    }
+    },
+    expose: ['onNextTest', 'onPreviousTest']
 }
 
 </script>
