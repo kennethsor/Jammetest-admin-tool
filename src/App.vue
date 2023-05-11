@@ -58,21 +58,17 @@ export default {
 <template>
   <div class="container">
     <div class="row">
-      <div class="col">
+      <div class="col-12">
         <JammetestNavbar class="fixed-top"></JammetestNavbar>
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-12">
         <JammetestTimer :datetime=datetime></JammetestTimer>
-      </div>
-      <div class="col">
-        <JammetestTestPicker @update-test="updateItem" ref="testPicker">
-        </JammetestTestPicker>
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-12">
         <JammetestTestInfo :testName="selectedItem ? selectedItem.name : 'Not selected'"
           :testDescription="selectedItem ? selectedItem.description : 'Not selected'" :testRunning="testRunning"
           :currentTime="datetime" ref="testInfo">
@@ -80,7 +76,11 @@ export default {
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-6">
+        <JammetestTestPicker @update-test="updateItem" ref="testPicker">
+        </JammetestTestPicker>
+      </div>
+      <div class="col-6">
         <JammetestTextControl @toggle-test-running="toggleTestRunning" @set-previous-test="onPreviousTest"
           @set-next-test="onNextTest"></JammetestTextControl>
       </div>

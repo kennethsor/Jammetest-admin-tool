@@ -47,7 +47,7 @@ export default {
 
 </script>
 <template>
-    <div class="card">
+    <div class="card text center">
         <div class="card-header">
             Test definition
         </div>
@@ -61,8 +61,7 @@ export default {
                     <li v-for="test in tests" :key="test.id" @click="dropdownOnClick(test)">
                         {{ test.name }}
                     </li>
-                </ul><br><br>
-                <button type="button" class="btn btn-secondary">Set test</button>
+                </ul>
             </div>
         </div>
     </div>
