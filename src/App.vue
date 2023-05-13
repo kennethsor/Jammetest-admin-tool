@@ -4,6 +4,7 @@ import JammetestTimer from './components/JammetestTimer.vue'
 import JammetestTestPicker from './components/JammetestTestPicker.vue'
 import JammetestTestInfo from './components/JammetestTestInfo.vue'
 import JammetestTextControl from './components/JammestestTestControl.vue'
+import JammetestTestComment from './components/JammetestTestComment.vue'
 
 export default {
   data() {
@@ -18,7 +19,8 @@ export default {
     JammetestTimer,
     JammetestTestPicker,
     JammetestTestInfo,
-    JammetestTextControl
+    JammetestTextControl,
+    JammetestTestComment
   },
   mounted() {
     this.timer = setInterval(this.updateDatetime, 1000);
@@ -56,31 +58,34 @@ export default {
 
 </script>
 <template>
-  <div class="container">
+  <div class="container vw-100 fixed-top">
     <div class="row">
-      <div class="col-12">
-        <JammetestNavbar class="fixed-top"></JammetestNavbar>
+      <div class="col-lg-12">
+        <JammetestNavbar></JammetestNavbar>
       </div>
     </div>
     <div class="row">
-      <div class="col-12">
+      <div class="col-lg-12">
         <JammetestTimer :datetime=datetime></JammetestTimer>
       </div>
     </div>
     <div class="row">
-      <div class="col-12">
+      <div class="col-lg-6">
         <JammetestTestInfo :testName="selectedItem ? selectedItem.name : 'Not selected'"
           :testDescription="selectedItem ? selectedItem.description : 'Not selected'" :testRunning="testRunning"
           :currentTime="datetime" ref="testInfo">
         </JammetestTestInfo>
       </div>
+      <div class="col-lg-6">
+        <JammetestTestComment :testComment="selectedItem ? selectedItem.comments : 'No comments'"></JammetestTestComment>
+      </div>
     </div>
     <div class="row">
-      <div class="col-6">
+      <div class="col-lg-6">
         <JammetestTestPicker @update-test="updateItem" ref="testPicker">
         </JammetestTestPicker>
       </div>
-      <div class="col-6">
+      <div class="col-lg-6">
         <JammetestTextControl @toggle-test-running="toggleTestRunning" @set-previous-test="onPreviousTest"
           @set-next-test="onNextTest"></JammetestTextControl>
       </div>

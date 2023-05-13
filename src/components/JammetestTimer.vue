@@ -26,14 +26,12 @@ export default {
 </script>
 
 <template>
-    <div class="card text-center">
-        <div class="card-header">
+    <div class="card text-center border-dark">
+        <div class="card-header bg-light">
             Date and time
         </div>
         <div class="card-body">
-            <h2>{{ getDayOfWeek(datetime) }} {{ getDateString(datetime) }} {{ getTimeString(datetime) }}</h2>
-            <!--p>{{ getDateString(datetime) }}</p>
-            <p>{{ getTimeString(datetime) }}</p-->
+            <h4>{{ getDayOfWeek(datetime) }} {{ getDateString(datetime) }} {{ getTimeString(datetime) }}</h4>
         </div><br>
     </div>
 </template>

@@ -23,8 +23,8 @@ export default {
 }
 </script>
 <template>
-        <div class="card">
-        <div class="card-header">
+        <div class="card border-dark">
+        <div class="card-header bg-light">
             Test information
         </div>
         <div class="card-body">

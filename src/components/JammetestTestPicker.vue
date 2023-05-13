@@ -47,9 +47,9 @@ export default {
 
 </script>
 <template>
-    <div class="card text center">
-        <div class="card-header">
-            Test definition
+    <div class="card border-dark">
+        <div class="card-header bg-light">
+            Choose test
         </div>
         <div class="card-body">
             <div class="dropdown">
