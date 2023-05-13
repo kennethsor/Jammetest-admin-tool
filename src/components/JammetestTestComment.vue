@@ -23,7 +23,7 @@ export default {
                 <button class="btn btn-primary" @click="onEditableClick">
                     <i v-bind:class="[textDisabled ? 'bi-pencil-fill' : 'bi-save-fill']"
                     style="font-size: 1rem;"></i></button>
-                <textarea class="form-control" id="textAreaExample1" rows="4" :disabled="textDisabled">
+                <textarea class="form-control" id="commentsArea" rows="4" :disabled="textDisabled">
                 {{ testComment }}</textarea>
             </div>
         </div><br>
