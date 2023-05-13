@@ -6,7 +6,8 @@ export default {
     data() {
         return {
             tests: tests.tests,
-            selectedItem: null
+            selectedItem: null,
+            debugInfo:''
         }
     },
     methods: {
@@ -37,12 +38,15 @@ export default {
                 }
                 // in any other case, do nothing since it is the first element
             }
+        },
+        updateTestComment(comment){
+            this.debugInfo = comment;
         }
     },
     mounted() {
         this.dropdownOnClick(this.tests[0]);
     },
-    expose: ['onNextTest', 'onPreviousTest']
+    expose: ['onNextTest', 'onPreviousTest', 'updateTestComment']
 }
 
 </script>
@@ -62,6 +66,7 @@ export default {
                         {{ test.name }}
                     </li>
                 </ul>
+                <p>{{ debugInfo }}</p>
             </div>
         </div>
     </div>

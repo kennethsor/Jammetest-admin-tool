@@ -52,6 +52,9 @@ export default {
     },
     onPreviousTest(parameter) {
       this.$refs.testPicker.onPreviousTest();
+    },
+    updateComment(comment){
+      this.$refs.testPicker.updateComment(comment);
     }
   }
 }
@@ -77,7 +80,7 @@ export default {
         </JammetestTestInfo>
       </div>
       <div class="col-lg-6">
-        <JammetestTestComment :testComment="selectedItem ? selectedItem.comments : 'No comments'"></JammetestTestComment>
+        <JammetestTestComment :testComment="selectedItem ? selectedItem.comments : 'No comments'" @update-comment="updateComment"></JammetestTestComment>
       </div>
     </div>
     <div class="row">

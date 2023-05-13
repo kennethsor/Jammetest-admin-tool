@@ -3,13 +3,17 @@ export default {
     props: ['testComment'],
     data() {
         return {
-            textDisabled: true
+            textDisabled: true,
         }
     },
     methods: {
         onEditableClick() {
+            // todo: emit a notification to the app.vue file to trigger an update of the list of tests
             this.textDisabled = !this.textDisabled;
         }
+    },
+    calculated: {
+
     }
 }
 </script>
@@ -20,12 +24,19 @@ export default {
         </div>
         <div class="card-body">
             <div class="form-outline">
-                <button class="btn btn-primary" @click="onEditableClick">
+                <button v-bind:class="[textDisabled ? 'btn btn-primary' : 'btn btn-danger']" @click="onEditableClick">
                     <i v-bind:class="[textDisabled ? 'bi-pencil-fill' : 'bi-save-fill']"
-                    style="font-size: 1rem;"></i></button>
-                <textarea class="form-control" id="commentsArea" rows="4" :disabled="textDisabled">
-                {{ testComment }}</textarea>
+                        style="font-size: 1rem;"></i></button>
+                <div class="form-group">
+                    <textarea :value="testComment" class="form-control text-left" id="commentsArea" rows="4"
+                        :disabled="textDisabled" @input="event => testComment = event.target.value"></textarea>
+                </div>
             </div>
         </div><br>
     </div>
 </template>
+<style>
+textarea {
+    vertical-align: top;
+}
+</style>
