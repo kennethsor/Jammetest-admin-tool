@@ -4,11 +4,18 @@ export default {
     data() {
         return {
             textDisabled: true,
+            debugText: ''
         }
     },
     methods: {
         onEditableClick() {
             // todo: emit a notification to the app.vue file to trigger an update of the list of tests
+            if(!this.textDisabled) {
+                this.debugText = 'Ready to save';
+            }
+            else{
+                this.debugText = ''
+            }
             this.textDisabled = !this.textDisabled;
         }
     },
@@ -31,6 +38,7 @@ export default {
                     <textarea :value="testComment" class="form-control text-left" id="commentsArea" rows="4"
                         :disabled="textDisabled" @input="event => testComment = event.target.value"></textarea>
                 </div>
+                <p>{{ debugText }}</p>
             </div>
         </div><br>
     </div>

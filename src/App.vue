@@ -3,7 +3,7 @@ import JammetestNavbar from './components/JammetestNavbar.vue'
 import JammetestTimer from './components/JammetestTimer.vue'
 import JammetestTestPicker from './components/JammetestTestPicker.vue'
 import JammetestTestInfo from './components/JammetestTestInfo.vue'
-import JammetestTextControl from './components/JammestestTestControl.vue'
+import JammetestTextControl from './components/JammetestTestControl.vue'
 import JammetestTestComment from './components/JammetestTestComment.vue'
 
 export default {
