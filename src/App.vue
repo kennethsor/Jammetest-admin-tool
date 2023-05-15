@@ -54,7 +54,8 @@ export default {
       this.$refs.testPicker.onPreviousTest();
     },
     updateComment(comment){
-      this.$refs.testPicker.updateComment(comment);
+      //this.$refs.testPicker.updateComment(comment);
+      this.debugValue = comment;
     }
   }
 }
