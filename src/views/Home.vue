@@ -8,6 +8,7 @@ import JammetestTestComment from '../components/JammetestTestComment.vue'
 export default {
     data() {
         return {
+            testDefinitions: [],
             datetime: new Date(),
             selectedItem: null,
             testRunning: false,
@@ -21,6 +22,9 @@ export default {
         JammetestTextControl,
         JammetestTestComment
     },
+    beforeMount() {
+
+    },
     mounted() {
     this.timer = setInterval(this.updateDatetime, 1000);
   },
@@ -28,11 +32,18 @@ export default {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
+      this.axios.get('https://localhost:5172/api/testDefinitions').then(resp => {
+        this.testDefinitions = resp.data;
+      });
     }
   },
   methods: {
     updateDatetime() {
-      this.datetime = new Date();
+      this.axios.get('https://localhost:5172/api/servertime').then(resp => {
+        this.datetime = new Date(resp.data.date);
+      }).catch(e => {
+        console.log(e)
+      });
     },
     updateItem(item) {
       this.selectedItem = item;

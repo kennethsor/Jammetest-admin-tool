@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { createAuth0 } from '@auth0/auth0-vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 import App from './App.vue'
 
 import './assets/main.css'
@@ -19,6 +21,8 @@ const router = createRouter({
     ]
 });
 
+axios.defaults.withCredentials = false;
+
 createApp(App)
     .use(createAuth0({
         domain: 'mynestcompanies.eu.auth0.com',
@@ -27,5 +31,6 @@ createApp(App)
             redirect_uri: window.location.origin
         }
     }))
+    .use(VueAxios, axios)
     .use(router)
     .mount('#app')
