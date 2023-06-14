@@ -1,14 +1,15 @@
 <script>
-import tests from './../testdefinitions/test_definitions.json'
-
+//import tests from './../testdefinitions/test_definitions.json'
 
 export default {
     data() {
         return {
-            tests: tests.tests,
             selectedItem: null,
             debugInfo:''
         }
+    },
+    props: {
+        tests: Object,
     },
     methods: {
         dropdownOnClick(item) {
@@ -44,6 +45,7 @@ export default {
         }
     },
     mounted() {
+        console.log(this.tests);
         this.dropdownOnClick(this.tests[0]);
     },
     expose: ['onNextTest', 'onPreviousTest', 'updateTestComment']

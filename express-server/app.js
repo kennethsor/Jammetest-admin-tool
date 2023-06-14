@@ -9,13 +9,13 @@ const testDefinitions = require('./testdefinitions/test_definitions.json');
 const app = express();
 const PORT = process.env.PORT || 5172;
 
-let currentTest = testDefinitions.tests[0];
+var currentTest = testDefinitions.tests[0];
 
 const key = fs.readFileSync('localhost-key.pem', 'utf-8');
 const cert = fs.readFileSync('localhost.pem', 'utf-8');
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors()); 
 app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) =>  {
@@ -35,6 +35,11 @@ app.get('/api/testDefinitions', (req, res) => {
 app.get('/api/currentTest', (req, res) => {
     console.log(new Date().toISOString() + " - received request for chosen test!");
     res.send(currentTest);    
+});
+
+app.post('/api/currentTest', (req, res) => {
+    console.log(new Date().toISOString() + " - received post for chosen test!");
+    currentTest = req.body.selectedItem;
 });
 
 app.get('updateConfig', (req,res) => {
