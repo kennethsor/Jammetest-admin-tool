@@ -5,6 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const testDefinitions = require('./testdefinitions/test_definitions.json');
+const testSites = require('./src/TestSitesStatusObj.json');
 
 const app = express();
 const PORT = process.env.PORT || 5172;
@@ -20,6 +21,10 @@ app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) =>  {
     res.send("<h2>It's Working!</h2>")
+});
+
+app.get('/api/testsites', (req, res) => {
+    console.log(new Date().toISOString() + " - received requst for available sites!");
 });
 
 app.get('/api/servertime', (req, res) => {

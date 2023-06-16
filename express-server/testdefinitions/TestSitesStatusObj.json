@@ -1,0 +1,98 @@
+{
+    "testSites": [
+        {
+            "id": 1,
+            "name": "Kirkegården",
+            "tests": [
+                {
+                    "id": 1,
+                    "name": "Test 1",
+                    "description": "Description 1",
+                    "comments": "Comment 1",
+                    "started":null,
+                    "ended": null
+                },
+                {
+                    "id": 2,
+                    "name": "Test 2",
+                    "description": "Description 2",
+                    "comments": "Comment 2",
+                    "started":null,
+                    "ended": null
+                },
+                {
+                    "id": 3,
+                    "name": "Test 3",
+                    "description": "Description 3",
+                    "comments": "Comment 3",
+                    "started":null,
+                    "ended": null
+                },
+                {
+                    "id": 4,
+                    "name": "Test 4",
+                    "description": "Description 4",
+                    "comments": "Comment 4",
+                    "started":null,
+                    "ended": null
+                },
+                {
+                    "id": 5,
+                    "name": "Test 5",
+                    "description": "Description 5",
+                    "comments": "Comment 5",
+                    "started":null,
+                    "ended": null
+                }
+            ],
+            "testsRun": []
+        },
+        {
+            "id": 2,
+            "name": "Samfunnshuset",
+            "tests": [
+                {
+                    "id": 1,
+                    "name": "Test 1",
+                    "description": "Description 1",
+                    "comments": "Comment 1",
+                    "started":null,
+                    "ended": null
+                },
+                {
+                    "id": 2,
+                    "name": "Test 2",
+                    "description": "Description 2",
+                    "comments": "Comment 2",
+                    "started":null,
+                    "ended": null
+                },
+                {
+                    "id": 3,
+                    "name": "Test 3",
+                    "description": "Description 3",
+                    "comments": "Comment 3",
+                    "started":null,
+                    "ended": null
+                },
+                {
+                    "id": 4,
+                    "name": "Test 4",
+                    "description": "Description 4",
+                    "comments": "Comment 4",
+                    "started":null,
+                    "ended": null
+                },
+                {
+                    "id": 5,
+                    "name": "Test 5",
+                    "description": "Description 5",
+                    "comments": "Comment 5",
+                    "started":null,
+                    "ended": null
+                }
+            ],
+            "testsRun": []
+        }
+    ]
+}
