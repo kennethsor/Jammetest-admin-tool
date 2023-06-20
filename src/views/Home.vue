@@ -2,15 +2,18 @@
 import JammetestTimer from '../components/JammetestTimer.vue'
 import JammetestTestPicker from '../components/JammetestTestPicker.vue'
 import JammetestTestInfo from '../components/JammetestTestInfo.vue'
-import JammetestTextControl from '../components/JammetestTestControl.vue'
+import JammetestTestControl from '../components/JammetestTestControl.vue'
 import JammetestTestComment from '../components/JammetestTestComment.vue'
+import JammetestSitePicker from '../components/JammetestSitePicker.vue'
 
 export default {
   data() {
     return {
-      testDefinitions: [],
+      sites: [],
+      tests: [],
       datetime: new Date(),
-      selectedItem: null,
+      selectedSite: null,
+      selectedTest: null,
       testRunning: false,
       isAuthenticated: this.$auth0.isAuthenticated
     }
@@ -19,17 +22,16 @@ export default {
     JammetestTimer,
     JammetestTestPicker,
     JammetestTestInfo,
-    JammetestTextControl,
-    JammetestTestComment
+    JammetestTestControl,
+    JammetestTestComment,
+    JammetestSitePicker
   },
   beforeMount() {
-    this.axios.get('https://localhost:5172/api/testDefinitions').then(definitions => {
-      this.testDefinitions = definitions.data;
-      console.log(this.testDefinitions);
-      this.axios.get('https://localhost:5172/api/currentTest').then(currentTest => {
-        this.selectedItem = currentTest.data;
-      }).catch(currentTestError => { conso.log(currentTestError) });
-    }).catch(definitionsError => { console.log(definitionsError) });
+    this.axios.get('https://localhost:5172/api/testsites').then(sites => {
+      this.sites = sites.data;
+    }).catch(err => {
+      console.log(err);
+    });
   },
   mounted() {
     this.timer = setInterval(this.updateDatetime, 1000);
@@ -44,16 +46,23 @@ export default {
     updateDatetime() {
       this.axios.get('https://localhost:5172/api/servertime').then(resp => {
         this.datetime = new Date(resp.data.date);
-        this.axios.get('https://localhost:5172/api/testDefinitions').then(definitions => {
-          this.testDefinitions = definitions.data;
-          console.log(this.testDefinitions);
-          this.axios.get('https://localhost:5172/api/currentTest').then(currentTest => {
-            this.selectedItem = currentTest.data;
-          }).catch(currentTestError => { conso.log(currentTestError) });
-        }).catch(definitionsError => { console.log(definitionsError) });
       }).catch(e => {
         console.log(e)
       });
+      this.axios.get('https://localhost:5172/api/testsites').then(sites => {
+        this.sites = sites.data
+      }).catch(err => {
+        console.log(err)
+      });
+    },
+    updateSite(site) {
+      this.selectedSite = site;
+      this.axios.get('https://localhost:5172/api/testdefinitions/:' + site).then(tests => {
+        this.tests = tests.data;
+      }).catch(err => { console.log(err) });
+    },
+    updateTest(test) {
+      this.selectedTest = test;
     },
     updateItem(item) {
       this.axios.post('https://localhost:5172/api/currentTest', { selectedItem: item }).then(resp => {
@@ -64,19 +73,41 @@ export default {
       this.selectedItem = item;
     },
     toggleTestRunning(running) {
-      this.testRunning = running;
+      console.log('******* toggleTestRunning *******');
+      this.testRunning = !this.testRunning;
+
+      this.testRunning ? console.log('test is running') : console.log('test is not running');
+
+      // set the start date of the selected site
       if (this.testRunning) {
-        this.$refs.testInfo.setTestStartTime(new Date());
+        const now = new Date();
+        this.$refs.testInfo.setTestStartTime(now);
+        this.selectedTest.started = now.toISOString();
       }
       else {
-        this.$refs.testInfo.setTestStartTime(null)
+        // stop the test
+        // communicate this to the JammetestInfo component
       }
+
+
+      // update the underlying control object through the REST API
+
+      // Store the updates (must be done on the backend side)
+      // this.testRunning = running;
+      // if (this.testRunning) {
+      //   this.$refs.testInfo.setTestStartTime(new Date());
+      // }
+      // else {
+      //   this.$refs.testInfo.setTestStartTime(null)
+      // }
     },
     onNextTest(parameter) {
-      this.$refs.testPicker.onNextTest();
+      console.log('******* onNextTest *******');
+      // this.$refs.testPicker.onNextTest();
     },
     onPreviousTest(parameter) {
-      this.$refs.testPicker.onPreviousTest();
+      console.log('******* onPreviousTest *******');
+      // this.$refs.testPicker.onPreviousTest();
     },
     updateComment(comment) {
       //this.$refs.testPicker.updateComment(comment);
@@ -93,24 +124,16 @@ export default {
   </div>
   <div class="row">
     <div class="col-lg-6">
-      <JammetestTestInfo :testName="selectedItem ? selectedItem.name : 'Not selected'"
-        :testDescription="selectedItem ? selectedItem.description : 'Not selected'" :testRunning="testRunning"
-        :currentTime="datetime" ref="testInfo">
-      </JammetestTestInfo>
+      <JammetestSitePicker :sites="sites" @update-site="updateSite"></JammetestSitePicker>
+      <JammetestTestPicker :tests="tests" @update-test="updateTest"></JammetestTestPicker>
+      <JammetestTestControl @toggle-test-running="toggleTestRunning" @set-previous-test="onPreviousTest"
+        @set-next-test="onNextTest"></JammetestTestControl>
     </div>
-    <div class="col-lg-6" v-if="isAuthenticated">
-      <JammetestTestComment :testComment="selectedItem ? selectedItem.comments : 'No comments'"
-        @update-comment="updateComment"></JammetestTestComment>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-6" v-if="isAuthenticated">
-      <JammetestTestPicker :tests="testDefinitions" @update-test="updateItem" ref="testPicker">
-      </JammetestTestPicker>
-    </div>
-    <div class="col-lg-6" v-if="isAuthenticated">
-      <JammetestTextControl @toggle-test-running="toggleTestRunning" @set-previous-test="onPreviousTest"
-        @set-next-test="onNextTest"></JammetestTextControl>
+    <div class="col-lg-6">
+      <JammetestTestInfo :testName="this.selectedTest ? this.selectedTest.name : 'no test chosen'"
+        :testDescription="this.selectedTest ? this.selectedTest.description : 'no test chosen'"
+        :testRunning="this.testRunning" :testStartTime="this.selectedTest ? this.selectedTest : null"
+        :currentTime="this.datetime" ref="testInfo"></JammetestTestInfo>
     </div>
   </div>
 </template>

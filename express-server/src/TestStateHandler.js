@@ -7,8 +7,8 @@ const TestStateHandler = (() => {
         const _definitions = definitions;
 
         const getAllSites = () => {
-            console.log(_definitions);
             var sites = [];
+
             _.each(_definitions.testSites, site => {
                 sites.push(site.name);
             });

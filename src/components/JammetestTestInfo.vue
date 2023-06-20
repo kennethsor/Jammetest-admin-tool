@@ -2,7 +2,8 @@
 export default {
     data() {
         return {
-            testStartTime: null
+            testStartTime: null,
+            elapsedTime: null
         }
     },
     props: {
@@ -17,6 +18,9 @@ export default {
                 this.elapsedTime = 0;
             }
             this.testStartTime = datetime;
+        },
+        formatElapsedTime(seconds) {
+            return(seconds-(seconds%=60))/60+(9<seconds?':':':0')+seconds;
         }
     },
     expose: ['setTestStartTime']
@@ -32,7 +36,7 @@ export default {
             <h4>Test description: {{ testDescription }}</h4>
             <h4>Test running: {{ testRunning ? 'Yes' : 'No' }}</h4>
             <h5>Start time: {{ testStartTime ? testStartTime.toISOString() : ''}}</h5>
-            <h5>Elapsed time: {{ testRunning ? parseInt((currentTime.getTime() - testStartTime.getTime()) / 1000) : 0 }} s</h5>
+            <h5>Elapsed time: {{ testRunning ? formatElapsedTime(parseInt((currentTime.getTime() - testStartTime.getTime()) / 1000)) : 0 }} m</h5>
         </div><br>
     </div>
 </template>
