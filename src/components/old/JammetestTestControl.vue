@@ -7,8 +7,8 @@ export default {
     },
     methods: {
         onClickRunStop() {
-            this.$emit('toggle-test-running', this.testRunning);
             this.testRunning = !this.testRunning;
+            this.$emit('toggle-test-running', this.testRunning);
         },
         onClickPrevious() {
             if (!this.testRunning) {
@@ -24,7 +24,7 @@ export default {
 }
 </script>
 <template>
-        <div class="card border-dark">
+    <div class="card border-dark">
         <div class="card-header bg-light">
             Test control
         </div>
@@ -35,7 +35,7 @@ export default {
                     v-bind:class="[!testRunning ? 'bi-play-circle-fill' : 'bi-pause-circle-fill']"
                     style="font-size: 2rem;"></i></button>
             <button class="btn btn-primary btn-space-left" @click="onClickNext"><i class="bi-skip-forward-fill"
-                    style="font-size: 2rem;"></i></button>
+                    style="font-size: 2rem;"></i></button> 
         </div><br>
     </div>
 </template>
@@ -46,5 +46,4 @@ export default {
 
 .btn-space-right {
     margin-right: 2px;
-}
-</style>
+}</style>

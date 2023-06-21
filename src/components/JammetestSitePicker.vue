@@ -2,20 +2,24 @@
 export default {
     data() {
         return {
-            selectedSite: null 
+            sites: [],
+            selectedSite: null
         }
     },
-    props: {
-        sites: Object
+    beforeMount() {
+        this.axios.get('https://localhost:5172/api/testsites')
+            .then(resp => {
+                this.sites = resp.data;
+            })
+            .catch(err => {
+                console.log(err);
+            });
     },
-    methods:{
+    methods: {
         dropdownOnClick(item) {
             this.selectedSite = item;
             this.$emit('update-site', this.selectedSite);
         }
-    },
-    mounted() {
-
     }
 }
 
