@@ -3,6 +3,18 @@ const fs = require('fs');
 const https = require('https');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+require('dotenv').config()
+
+const { auth } = require('express-openid-connect');
+
+const authConfig = {
+    authRequired: false,
+    auth0Logout: true,
+    secret: process.env.SECRET,
+    baseURL: process.env.BASEURL,
+    clientID: process.env.CLIENTID,
+    issuerBaseURL: process.env.ISSUER
+}
 
 const TestHandler = require('./src/TestStateHandler').TestStateHandler;
 const testDefinitions = require('./testdefinitions/TestSitesStatusObj.json');
@@ -20,6 +32,7 @@ const cert = fs.readFileSync('localhost.pem', 'utf-8');
 app.use(bodyParser.json());
 app.use(cors()); 
 app.use(express.urlencoded({extended: true}));
+app.use(auth(authConfig));
 
 
 app.get('/', (req, res) =>  {
