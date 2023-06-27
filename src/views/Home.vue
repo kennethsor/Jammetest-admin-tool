@@ -5,13 +5,19 @@ import JammetestTestPicker from '@/components/JammetestTestPicker.vue'
 import JammetestTestInfo from '@/components/JammetestTestInfo.vue'
 import JammetestTestControl from '@/components/JammetestTestControl.vue'
 
+// ***** Token handling
+//https://auth0.com/blog/complete-guide-to-vue-user-authentication/
+
 export default {
     data() {
         return {
             timer: null,
             datetime: new Date(),
             selectedSite: null,
-            selectedTest: null
+            selectedTest: null,
+            counter: 0,
+            debugText: '',
+            isAuthenticated: this.$auth0.isAuthenticated
         }
     },
     components: {
@@ -32,6 +38,7 @@ export default {
     },
     methods: {
         updateDatetime() {
+
             this.axios.get('https://localhost:5172/api/servertime')
                 .then(resp => {
                     this.datetime = new Date(resp.data.date);
@@ -49,8 +56,30 @@ export default {
             this.$refs.testInfo.updateTestInfo(this.selectedSite, this.selectedTest);
         },
         toggleTestRunning(running) {
-            if (!running) {
-                this.axios.post('https://localhost:5172/api/starttest', { site: this.selectedSite, test: this.selectedTest.id })
+            const data = {
+                client_id: import.meta.env.VITE_APP_REST_REST_CLIENT_ID,
+                client_secret: import.meta.env.VITE_APP_REST_CLIENT_SECRET,
+                audience: import.meta.env.VITE_APP_REST_AUDIENCE,
+                grant_type: 'client_credentials'
+            }
+            
+            const header = {
+                "content-type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":"GET,POST,OPTIONS,DELETE,PUT"
+            }
+
+            this.axios.post(import.meta.env.VITE_APP_REST_DOMAIN, data, {headers: header})
+                .then(resp => {console.log(resp)})
+                .catch(err => {
+                    console.log('********************@');
+                    console.log(err)
+                });
+
+
+
+            /*if (!running) {
+                this.axios.post('https://localhost:5172/api/starttest', { site: this.selectedSite, test: this.selectedTest.id }, header)
                     .then(resp => {
                         this.axios.get('https://localhost:5172/api/testdefinitions/:' + this.selectedSite + '/:' + this.selectedTest.id)
                             .then(resp => {
@@ -76,7 +105,7 @@ export default {
                     .catch(err => {
                         console.log(err);
                     });
-            }
+            }*/
 
         },
         onSetPreviousTest() {
@@ -105,8 +134,8 @@ export default {
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <JammetestTestControl @toggle-test-running="toggleTestRunning" @set-previous-test="onSetPreviousTest"
-                @set-next-test="onSetNextTest"></JammetestTestControl>
+            <JammetestTestControl v-if="this.isAuthenticated" @toggle-test-running="toggleTestRunning"
+                @set-previous-test="onSetPreviousTest" @set-next-test="onSetNextTest"></JammetestTestControl>
         </div>
     </div>
 </template>

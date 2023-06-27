@@ -3,18 +3,14 @@ const fs = require('fs');
 const https = require('https');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { auth } = require('express-oauth2-jwt-bearer');
 require('dotenv').config()
 
-const { auth } = require('express-openid-connect');
-
-const authConfig = {
-    authRequired: false,
-    auth0Logout: true,
-    secret: process.env.SECRET,
-    baseURL: process.env.BASEURL,
-    clientID: process.env.CLIENTID,
-    issuerBaseURL: process.env.ISSUER
-}
+const jwtCheck = auth({
+    audience: process.env.EXPRESS_APP_AUDIENCE,
+    issuerBaseURL: process.env.EXPRESS_APP_ISSUERBASE_URL,
+    tokenSigningAlg: process.env.EXPRESS_APP_TOKEN_SIGNING_ALG
+  });
 
 const TestHandler = require('./src/TestStateHandler').TestStateHandler;
 const testDefinitions = require('./testdefinitions/TestSitesStatusObj.json');
@@ -22,7 +18,6 @@ const testDefinitions = require('./testdefinitions/TestSitesStatusObj.json');
 const app = express();
 const PORT = process.env.PORT || 5172;
 
-//var currentTest = testDefinitions.tests[0];
 const currentTest = 1;
 const testHandler = TestHandler.getInstance(testDefinitions);
 
@@ -32,7 +27,6 @@ const cert = fs.readFileSync('localhost.pem', 'utf-8');
 app.use(bodyParser.json());
 app.use(cors()); 
 app.use(express.urlencoded({extended: true}));
-app.use(auth(authConfig));
 
 
 app.get('/', (req, res) =>  {
@@ -72,13 +66,13 @@ app.get('/api/testrunning/:sitename/:testid', (req, res) => {
     res.send(testHandler.isTestRunning(site.id, testid)); 
 });
 
-app.post('/api/starttest/', (req, res) => {
+app.post('/api/starttest/', jwtCheck, (req, res) => {
     const body = req.body;
     console.log(new Date().toISOString() + " - received post to start running test " + body.test + ' on site ' + body.site);
     res.sendStatus(!testHandler.startRunningTest(body.site, body.test) ? 200 : 406);
 });
 
-app.post('/api/stoptest/', (req, res) => {
+app.post('/api/stoptest/', jwtCheck, (req, res) => {
     const body = req.body;
     console.log(new Date().toISOString() + " - received post to stop running test " + body.test + ' on site ' + body.site);
     res.sendStatus(!testHandler.stopRunningTest(body.site, body.test) ? 200 : 406);
