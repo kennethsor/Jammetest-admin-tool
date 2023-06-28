@@ -56,56 +56,66 @@ export default {
             this.$refs.testInfo.updateTestInfo(this.selectedSite, this.selectedTest);
         },
         toggleTestRunning(running) {
-            const data = {
-                client_id: import.meta.env.VITE_APP_REST_REST_CLIENT_ID,
-                client_secret: import.meta.env.VITE_APP_REST_CLIENT_SECRET,
-                audience: import.meta.env.VITE_APP_REST_AUDIENCE,
-                grant_type: 'client_credentials'
+            this.axios.post(
+                import.meta.env.VITE_APP_REST_DOMAIN,
+                {
+                    "client_id": import.meta.env.VITE_APP_REST_REST_CLIENT_ID,
+                    "client_secret": import.meta.env.VITE_APP_REST_CLIENT_SECRET,
+                    "audience": import.meta.env.VITE_APP_REST_AUDIENCE,
+                    "grant_type": "client_credentials"
+                }, {
+                headers: { "content-type": "application/json" }
             }
-            
-            const header = {
-                "content-type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods":"GET,POST,OPTIONS,DELETE,PUT"
-            }
+            ).then(resp => {
+                const token = resp.data.access_token;
+                console.log(resp.data.access_token);
 
-            this.axios.post(import.meta.env.VITE_APP_REST_DOMAIN, data, {headers: header})
-                .then(resp => {console.log(resp)})
-                .catch(err => {
-                    console.log('********************@');
-                    console.log(err)
-                });
+                if (!running) {
+                    console.log('Starting test ' + this.selectedTest.id + ' at site ' + this.selectedSite);
 
-
-
-            /*if (!running) {
-                this.axios.post('https://localhost:5172/api/starttest', { site: this.selectedSite, test: this.selectedTest.id }, header)
-                    .then(resp => {
-                        this.axios.get('https://localhost:5172/api/testdefinitions/:' + this.selectedSite + '/:' + this.selectedTest.id)
-                            .then(resp => {
-                                this.selectedTest = resp.data;
-                                this.$refs.testInfo.updateTestInfo(this.selectedSite, this.selectedTest);
-                            })
-                            .catch(gerr => console.log(gerr));
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-            else {
-                this.axios.post('https://localhost:5172/api/stoptest', { site: this.selectedSite, test: this.selectedTest.id })
-                    .then(resp => {
-                        this.axios.get('https://localhost:5172/api/testdefinitions/:' + this.selectedSite + '/:' + this.selectedTest.id)
-                            .then(resp => {
-                                this.selectedTest = resp.data;
-                                this.$refs.testInfo.updateTestInfo(this.selectedSite, this.selectedTest);
-                            })
-                            .catch(gerr => console.log(gerr));
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }*/
+                    this.axios.post(
+                        'https://test.ing:5172/api/starttest',
+                        { site: this.selectedSite, test: this.selectedTest.id },
+                        {
+                            headers: {
+                                "Authorization": `Bearer ${token}`
+                            }
+                        }).then(resp => {
+                            console.log(resp);
+                            this.axios.get('https://test.ing:5172/api/testdefinitions/:' + this.selectedSite + '/:' + this.selectedTest.id)
+                                .then(resp => {
+                                    this.selectedTest = resp.data;
+                                    this.$refs.testInfo.updateTestInfo(this.selectedSite, this.selectedTest);
+                                })
+                                .catch(gerr => console.log(gerr));
+                        }).catch(err => {
+                            console.log(err);
+                        });
+                }
+                else {
+                    console.log('Stopping test ' + this.selectedTest.id + ' at site ' + this.selectedSite);
+                    this.axios.post(
+                        'https://test.ing:5172/api/stoptest',
+                        { site: this.selectedSite, test: this.selectedTest.id },
+                        {
+                            headers: {
+                                "Authorization": `Bearer ${token}`
+                            }
+                        }).then(resp => {
+                            console.log(resp);
+                            this.axios.get('https://test.ing:5172/api/testdefinitions/:' + this.selectedSite + '/:' + this.selectedTest.id)
+                                .then(resp => {
+                                    this.selectedTest = resp.data;
+                                    this.$refs.testInfo.updateTestInfo(this.selectedSite, this.selectedTest);
+                                })
+                                .catch(gerr => console.log(gerr));
+                        }).catch(err => {
+                            console.log(err);
+                        });
+                }
+            }).catch(err => {
+                console.log(err);
+            });
 
         },
         onSetPreviousTest() {

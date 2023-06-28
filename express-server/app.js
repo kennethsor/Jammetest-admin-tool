@@ -21,15 +21,15 @@ const PORT = process.env.PORT || 5172;
 const currentTest = 1;
 const testHandler = TestHandler.getInstance(testDefinitions);
 
-const key = fs.readFileSync('localhost-key.pem', 'utf-8');
-const cert = fs.readFileSync('localhost.pem', 'utf-8');
+const key = fs.readFileSync('test.ing.key.pem', 'utf-8');
+const cert = fs.readFileSync('test.ing.cert.pem', 'utf-8');
 
 app.use(bodyParser.json());
 app.use(cors()); 
 app.use(express.urlencoded({extended: true}));
 
 
-app.get('/', (req, res) =>  {
+app.get('/', jwtCheck, (req, res) =>  {
     res.send("<h2>It's Working!</h2>")
 });
 
@@ -67,6 +67,7 @@ app.get('/api/testrunning/:sitename/:testid', (req, res) => {
 });
 
 app.post('/api/starttest/', jwtCheck, (req, res) => {
+    console.log(jwtCheck);
     const body = req.body;
     console.log(new Date().toISOString() + " - received post to start running test " + body.test + ' on site ' + body.site);
     res.sendStatus(!testHandler.startRunningTest(body.site, body.test) ? 200 : 406);
