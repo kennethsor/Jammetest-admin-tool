@@ -25,8 +25,8 @@ axios.defaults.withCredentials = false;
 
 createApp(App)
     .use(createAuth0({
-        domain: 'mynestcompanies.eu.auth0.com',
-        clientId: '6I8MvUh7oinsyyQxfrxgnfeZKCpHJBJW',
+        domain: import.meta.env.VITE_APP_DOMAIN,
+        clientId: import.meta.env.VITE_APP_CLIENTID,
         authorizationParams: {
             redirect_uri: window.location.origin
         }

@@ -2,6 +2,7 @@ const _ = require('underscore');
 
 const TestStateHandler = (() => {
     var instance;
+    var runningTests = [];
 
     const Singleton = definitions => {
         const _definitions = definitions;
@@ -63,6 +64,56 @@ const TestStateHandler = (() => {
             return now.getTime() - (getTest(siteId, testId).started).getTime();
         }
 
+        const startRunningTest = (sitename, testid,) => {
+            const site = getSiteByName(sitename);
+            console.log('... starting test ' + site.tests[testid].name + ' on test ' + sitename);
+
+            // make sure that only one test per site is running
+            if(!checkIfTestOnSiteIsAlreadyRunning(site.id)) {
+                runningTests.push({siteid: site.id, testid: testid});
+                startTest(site.id, testid);
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        const checkIfTestOnSiteIsAlreadyRunning = (siteId) => {
+            if (runningTests.length === 0) {
+                return false;
+            }
+            else {
+                const test = _.filter(runningTests, element => {
+                    return element.siteid === siteId;
+                });
+
+                return test.length === 0 ? false : true;
+            }
+        }
+
+        const stopRunningTest = (sitename, testId) => {
+            // make sure that the test is running
+            const site = getSiteByName(sitename);
+
+            if(checkIfTestOnSiteIsAlreadyRunning(site.id)) {
+                const test = _.filter(runningTests, element => {
+                    return element.siteid === site.id;
+                })[0];
+                runningTests = _.filter(runningTests, t => {
+                    return t.siteid != test.siteid && t.testid != test.testid;
+                });
+
+                endTest(site.id, testId);
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
         return {
             getAllSites: getAllSites,
             getSiteByName: getSiteByName,
@@ -71,7 +122,10 @@ const TestStateHandler = (() => {
             isTestEnded: isTestEnded,
             startTest: startTest,
             endTest: endTest,
-            calculateElapsedTime: calculateElapsedTime
+            calculateElapsedTime: calculateElapsedTime,
+            startRunningTest: startRunningTest,
+            stopRunningTest: stopRunningTest,
+            getTest: getTest
         };
     }
 

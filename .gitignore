@@ -31,3 +31,5 @@ package-lock.json
 .vscode/
 
 *.pem
+.env
+old_keys/
