@@ -93,6 +93,14 @@ const TestStateHandler = (() => {
             }
         }
 
+        const getRunningTestOnSite = (siteId) => {
+            const test = _.filter(runningTests, element => {
+                return element.siteid === siteId;
+            });
+
+            return test.length != 0 ? test[0] : null;
+        }
+
         const stopRunningTest = (sitename, testId) => {
             // make sure that the test is running
             const site = getSiteByName(sitename);
@@ -114,18 +122,29 @@ const TestStateHandler = (() => {
             }
         }
 
+        const resetAllTests = () => {
+            for(var i = 0; i < _definitions.testSites.length; i++) {
+                for(var j = 0; j < _definitions.testSites[i].tests.length; j++) {
+                    _definitions.testSites[i].tests[j].started = null;
+                    _definitions.testSites[i].tests[j].ended = null;
+                }
+            }
+            runningTests = [];
+        }
+
         return {
             getAllSites: getAllSites,
             getSiteByName: getSiteByName,
             getSiteById: getSiteById,
             isTestRunning: isTestRunning,
             isTestEnded: isTestEnded,
-            startTest: startTest,
-            endTest: endTest,
             calculateElapsedTime: calculateElapsedTime,
             startRunningTest: startRunningTest,
             stopRunningTest: stopRunningTest,
-            getTest: getTest
+            getTest: getTest,
+            getRunningTestOnSite: getRunningTestOnSite,
+            resetAllTests: resetAllTests,
+            getAllDefinitions: () => {return _definitions}
         };
     }
 

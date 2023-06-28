@@ -32,34 +32,56 @@ test('Verify that test is not started if start time and end time is null', () =>
 
 test('Verify that started is set when startTest is set', () => {
     const handler = TestStateHandler.getInstance(testStateDefinition);
-    handler.startTest(1,1);
-    expect(handler.isTestRunning(1,1)).toBe(true);
-});
-
-test('Verify that test is not started if start time and end time is null', () => {
-    testStateDefinition.testSites[0].tests[0].started = (new Date()).toISOString();
-    const handler = TestStateHandler.getInstance(testStateDefinition);
+    const site = handler.getSiteById(1);
+    handler.startRunningTest(site.name, 1);
     expect(handler.isTestRunning(1,1)).toBe(true);
 });
 
 test('Verify that when you end a test testEnded will return true', () => {
     const handler = TestStateHandler.getInstance(testStateDefinition);
-    handler.startTest(2,2);
-    handler.endTest(2,2);
+    const site = handler.getSiteById(2);
+    handler.startRunningTest(site.name, 2);
+    handler.stopRunningTest(site.name, 2);
     expect(handler.isTestEnded(2,2)).toBe(true);
+});
+
+test('Verify that test is not started if start time and end time is null', () => {
+    const handler = TestStateHandler.getInstance(testStateDefinition);
+    handler.resetAllTests();
+    expect(handler.isTestRunning(1,1)).toBe(false);
 });
 
 test('Verify that you cannot end a test that has not beed starte', () => {
     const handler = TestStateHandler.getInstance(testStateDefinition);
-    handler.endTest(1,2);
-    expect(handler.isTestEnded(1,2)).toBe(false);
+    handler.resetAllTests();
+    const site = handler.getSiteById(2);
+    handler.stopRunningTest(site.name, 1);
+    expect(handler.isTestEnded(1,3)).toBe(false);
 });
 
 test('Verify that you get the correct elapsed time for a test', () => {
     const handler = TestStateHandler.getInstance(testStateDefinition);
-    handler.startTest(1,4);
-    setTimeout(() => {
-        handler.endTest(1,4);
-        expect(handler.calculateElapsedTime(1,4, (new Date()))).toBeGreaterThan(450);
-    },500);
+    handler.resetAllTests();
+    const site = handler.getSiteById(2);
+    handler.startRunningTest(site.name, 3);
+
+    const now = new Date()
+    expect(handler.calculateElapsedTime(2,3, new Date((now.getTime() + 500)))).toBeGreaterThan(450);
+    handler.stopRunningTest(site.name, 3);
+});
+
+test('Verify that if a test is already running, you get the correct test', () => {
+    const handler = TestStateHandler.getInstance(testStateDefinition);
+    handler.resetAllTests();
+    const site = handler.getSiteById(1);
+    handler.startRunningTest(site.name, 3);
+    const runningTest = handler.getRunningTestOnSite(1);
+    expect(runningTest.testid).toBe(3);
+});
+
+test('Verify that if no tests are running, you get no test', () => {
+    const handler = TestStateHandler.getInstance(testStateDefinition);
+    handler.resetAllTests();
+    const runningTest = handler.getRunningTestOnSite(1);
+    expect(runningTest).toBe(null);
 });

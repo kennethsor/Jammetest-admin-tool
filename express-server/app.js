@@ -79,21 +79,6 @@ app.post('/api/stoptest/', jwtCheck, (req, res) => {
     res.sendStatus(!testHandler.stopRunningTest(body.site, body.test) ? 200 : 406);
 });
 
-// app.get('/api/testDefinitions', (req, res) => {
-//     console.log(new Date().toISOString() + " - received request for all test definitions!");
-//     res.send(testDefinitions.tests);
-// });
-
-// app.get('/api/currentTest', (req, res) => {
-//     console.log(new Date().toISOString() + " - received request for chosen test!");
-//     res.send(currentTest);    
-// });
-
-// app.get('updateConfig', (req,res) => {
-//     res.send("Whatever...");
-// })
-
-
 https.createServer({key, cert}, app).listen(PORT, () => {
     console.log('REST is listening on port: ' + PORT);
 });
