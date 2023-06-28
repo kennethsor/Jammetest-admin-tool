@@ -5,9 +5,6 @@ import JammetestTestPicker from '@/components/JammetestTestPicker.vue'
 import JammetestTestInfo from '@/components/JammetestTestInfo.vue'
 import JammetestTestControl from '@/components/JammetestTestControl.vue'
 
-// ***** Token handling
-//https://auth0.com/blog/complete-guide-to-vue-user-authentication/
-
 export default {
     data() {
         return {
@@ -68,8 +65,6 @@ export default {
             }
             ).then(resp => {
                 const token = resp.data.access_token;
-                console.log(resp.data.access_token);
-
                 if (!running) {
                     console.log('Starting test ' + this.selectedTest.id + ' at site ' + this.selectedSite);
 
@@ -81,7 +76,6 @@ export default {
                                 "Authorization": `Bearer ${token}`
                             }
                         }).then(resp => {
-                            console.log(resp);
                             this.axios.get('https://test.ing:5172/api/testdefinitions/:' + this.selectedSite + '/:' + this.selectedTest.id)
                                 .then(resp => {
                                     this.selectedTest = resp.data;
@@ -102,7 +96,6 @@ export default {
                                 "Authorization": `Bearer ${token}`
                             }
                         }).then(resp => {
-                            console.log(resp);
                             this.axios.get('https://test.ing:5172/api/testdefinitions/:' + this.selectedSite + '/:' + this.selectedTest.id)
                                 .then(resp => {
                                     this.selectedTest = resp.data;
