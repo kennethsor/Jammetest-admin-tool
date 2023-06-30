@@ -7,7 +7,7 @@ export default {
         }
     },
     beforeMount() {
-        this.axios.get('https://localhost:5172/api/testsites')
+        this.axios.get('https://test.ing:5172/api/testsites')
             .then(resp => {
                 this.sites = resp.data;
             })

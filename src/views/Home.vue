@@ -12,6 +12,7 @@ export default {
             datetime: new Date(),
             selectedSite: null,
             selectedTest: null,
+            selectedTestRunning: false,
             counter: 0,
             debugText: '',
             isAuthenticated: this.$auth0.isAuthenticated
@@ -36,7 +37,7 @@ export default {
     methods: {
         updateDatetime() {
 
-            this.axios.get('https://localhost:5172/api/servertime')
+            this.axios.get('https://test.ing:5172/api/servertime')
                 .then(resp => {
                     this.datetime = new Date(resp.data.date);
                 })
@@ -46,11 +47,22 @@ export default {
         },
         updateSite(site) {
             this.selectedSite = site;
+            console.log('Check if there are running tests on the site...');
             this.$refs.testPicker.setSite(site);
         },
         updateTest(test) {
             this.selectedTest = test;
             this.$refs.testInfo.updateTestInfo(this.selectedSite, this.selectedTest);
+
+            if (this.isAuthenticated) {
+                if (this.selectedTest.started && this.selectedTest.ended) {
+                    this.$refs.testControl.runStatusUpdated(true);
+                }
+                else {
+                    this.$refs.testControl.runStatusUpdated(false);
+                }
+            }
+
         },
         toggleTestRunning(running) {
             this.axios.post(
@@ -137,8 +149,14 @@ export default {
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <JammetestTestControl v-if="this.isAuthenticated" @toggle-test-running="toggleTestRunning"
-                @set-previous-test="onSetPreviousTest" @set-next-test="onSetNextTest"></JammetestTestControl>
+            <JammetestTestControl v-if="this.isAuthenticated" 
+                @toggle-test-running="toggleTestRunning"
+                @set-previous-test="onSetPreviousTest" 
+                @set-next-test="onSetNextTest" 
+                :selectedSite="this.selectedSite"
+                :selectedTest="this.selectedTest"
+                ref="testControl">
+            </JammetestTestControl>
         </div>
     </div>
 </template>

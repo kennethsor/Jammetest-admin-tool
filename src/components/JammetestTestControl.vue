@@ -5,6 +5,11 @@ export default {
             testRunning: false
         }
     },
+    props: ['selectedSite', 'selectedTest'],
+    mounted() {
+        console.log('Mouting.....');
+        console.log(this.selectedTest);
+    },
     methods: {
         onClickRunStop() {
             this.$emit('toggle-test-running', this.testRunning);
@@ -19,8 +24,14 @@ export default {
             if (!this.testRunning) {
                 this.$emit('set-next-test', 'next');
             }
+        },
+        runStatusUpdated(status) {
+            console.log('Run Status updatet!!!');
+            console.log(this.selectedTest);
+            this.testRunning = status;
         }
-    }
+    },
+    expose: ['runStatusUpdated']
 }
 </script>
 <template>
@@ -31,8 +42,8 @@ export default {
         <div class="card-body text-center">
             <button class="btn btn-primary btn-space-right" @click="onClickPrevious"><i class="bi-skip-backward-fill"
                     style="font-size: 2rem;"></i></button>
-            <button v-bind:class="[!testRunning ? 'btn btn-primary' : 'btn btn-danger']" @click="onClickRunStop"><i
-                    v-bind:class="[!testRunning ? 'bi-play-circle-fill' : 'bi-pause-circle-fill']"
+            <button v-bind:class="[!this.testRunning ? 'btn btn-primary' : 'btn btn-danger']" @click="onClickRunStop"><i
+                    v-bind:class="[!this.testRunning ? 'bi-play-circle-fill' : 'bi-pause-circle-fill']"
                     style="font-size: 2rem;"></i></button>
             <button class="btn btn-primary btn-space-left" @click="onClickNext"><i class="bi-skip-forward-fill"
                     style="font-size: 2rem;"></i></button>

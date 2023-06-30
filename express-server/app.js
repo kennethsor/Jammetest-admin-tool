@@ -66,6 +66,14 @@ app.get('/api/testrunning/:sitename/:testid', (req, res) => {
     res.send(testHandler.isTestRunning(site.id, testid)); 
 });
 
+app.get('/api/getrunningtestat/:sitename', (req, res) => {
+    const site = testHandler.getSiteByName(req.params.sitename.replace(':',''));
+    console.log(new Date().toISOString() + ' - received request about running tests at site ' + site.name);
+    const testRef = testHandler.getRunningTestOnSite(site.id);
+
+    res.send(testRef ? testHandler.getTest(testRef.siteid, testRef.testid) : 'empty');
+});
+
 app.post('/api/starttest/', jwtCheck, (req, res) => {
     console.log(jwtCheck);
     const body = req.body;
